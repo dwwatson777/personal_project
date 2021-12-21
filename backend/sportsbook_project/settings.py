@@ -1,5 +1,6 @@
 from pathlib import Path
 import environ
+import datetime
 # Initialise environment variables
 env = environ.Env()
 environ.Env.read_env()
@@ -36,9 +37,9 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -134,7 +135,10 @@ REST_FRAMEWORK = {
 }
 
 JWT_AUTH = {
-    'JWT_RESPONSE_PAYLOAD_HANDLER': 'sportsbook_project.utils.my_jwt_response_handler'
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=60),
+    'JWT_ALLOW_REFRESH': True,
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=60),
+    'JWT_RESPONSE_PAYLOAD_HANDLER': 'sportsbook_project.utils.my_jwt_response_handler',
 }
 
 CORS_ORIGIN_ALLOW_ALL = True

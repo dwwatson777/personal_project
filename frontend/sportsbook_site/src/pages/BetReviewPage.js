@@ -5,7 +5,7 @@ function BetReviewPage(props) {
 
   return (
     <div>
-      
+      Bets
     </div>
   )
 }

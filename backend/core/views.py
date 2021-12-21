@@ -11,13 +11,14 @@ from .serializers import UserSerializer, UserSerializerWithToken
 
 @api_view(['GET'])
 def current_user(request):
-    serializer = UserSerializer
+    serializer = UserSerializer(request.user)
     return Response(serializer.data)
 
 class UserList(APIView):
-    permission_classes = (permissions.AllowAny)
+    permission_classes = (permissions.AllowAny,)
     
     def post(self, request, format=None):
+        print(request.data)
         serializer = UserSerializerWithToken(data=request.data)
         if serializer.is_valid():
             serializer.save()

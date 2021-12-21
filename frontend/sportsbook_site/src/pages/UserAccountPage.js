@@ -1,17 +1,12 @@
 import { useEffect, useState } from "react"
 
 
-function UserAccountPage(props) {
+function UserAccountPage() {
 
-  const [userAccounts, setUserAccounts] = useState([])
-
-  useEffect(() => {
-    
-  }, [])
 
   return (
     <div>
-      
+      User Account Page
     </div>
   )
 }

@@ -8,13 +8,13 @@ import BetReviewPage from "./pages/BetReviewPage"
 import UserAccountPage from "./pages/UserAccountPage"
 import UserContext from './contexts/UserContext.js';
 import { getLoggedInUser, login } from './api/UserAPI';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [ user, setUser ] = useState(null);
   const [error, setError] = useState(null);
 
-  console.log("USER: ", user)
   useEffect(() => {
     const getUser = async () => {
       if (localStorage.getItem("auth-user") !== 'null') {
@@ -61,7 +61,7 @@ function App() {
             <Route path="/" element={<HomePage isLoggedIn={isLoggedIn} handleLogout={handleLogout}/>} />
             <Route path="/login" element={<LoginPage isLoggedIn={isLoggedIn} handleLogin={handleLogin} handleLogout={handleLogout} user={user} />} />
             <Route path="/signup" element={<SignupPage />} />
-            <Route path="/bets/:betsID" element={<BetReviewPage />}/>
+            <Route path="/bets/" element={<BetReviewPage />}/>
             <Route path="/account/:accountID" element={<UserAccountPage />}/>
           </Routes>
         </UserContext.Provider>

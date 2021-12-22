@@ -1,26 +1,48 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import UserContext from '../contexts/UserContext.js';
-import axios from 'axios'
-import { Data } from './Data'
-import { Col, Container, Card, Dropdown } from 'react-bootstrap'
+import axios from 'axios';
+import { Data } from './Data';
+import { Col, Container, Card, Dropdown } from 'react-bootstrap';
+import BackendAPI from "../api/BackendAPI"
+import BetsApi from '../api/BetsApi.js';
 
 const HomePage = ({ isLoggedIn, handleLogout }) => {
   const userContext = useContext(UserContext);
   const { user } = userContext;
+    //STATES
+
+  const [bets, setBets] = useState(Data)
+  const [amount, setAmount] = useState()
+  const [bookMaker, setBookMaker] = useState(null)
+  const [typeBet, setTypeBet] = useState(null)
+  const [game, setGame] = useState(null) //going to replace 'bets' with 'game' for actual api call
+  const [choice, setChoice] = useState(null)
+  const [type, setType] = useState(null)
+
+  //HANDLERS
+  const handleAddBetSubmit = async (event) => {
+    event.preventDefault()
+    const betData = {
+      home_team: bets[0].home_team,
+      away_team: bets[0].away_team,
+      type: type.key,
+      bet_choice: choice.name,
+      odds: choice.price,
+      sports_book: bookMaker,
+      amount_bet: amount,
+      user: user.id
+    }
+    console.log(betData)
+    await BackendAPI.addNewBet(localStorage.getItem("auth-user"), betData)
+
+  }
+  
 
   //CONST API URL
 
   // const theOddsUrl = 'https://api.the-odds-api.com/v4/sports/basketball_nba/odds/?apiKey=757c85032fccd027cb5575eecbdd57fe&regions=us&markets=h2h,spreads,totals&oddsFormat=american';
 
-  //STATES
-
-  const [bets, setBets] = useState(Data)
-  const [newBet, setNewBet] = useState({'amount_bet':'', 'home_team': '', 'away_team': '', 'sports_book': '','type': '', 'bet_choice': '', 'odds': '', 'user': ''})
-  const [amount, setAmount] = useState()
-  const [bookMaker, setBookMaker] = useState(null)
-  const [typeBet, setTypeBet] = useState(null)
-  const [game, setGame] = useState(null) //going to replace 'bets' with 'game'
 
   //USEFFECT
 
@@ -35,17 +57,14 @@ const HomePage = ({ isLoggedIn, handleLogout }) => {
   let filteredMarkets = bets[0].bookmakers.filter(elem => elem.title === bookMaker)
   setTypeBet(filteredMarkets[0])
  }, [bookMaker])
- console.log(typeBet)
+ 
 
 //FUNCTIONS
 
-  function submitBet(evt) {
-    evt.preventDefault()
-    let tempBet = {...newBet}
-    tempBet.amount_bet = amount
-    tempBet.home_team = bets[0].home_team
-    setNewBet(tempBet)
-  }
+  let handleBookmakerSelect = (evt) => {
+    setBookMaker(evt.target.id)
+    console.log(evt.target.id)
+}
 
   function changeHandler(evt) {
     let tempAmount = evt.target.value
@@ -56,13 +75,13 @@ const HomePage = ({ isLoggedIn, handleLogout }) => {
     return(
       <Dropdown><Dropdown.Toggle>Select SportsBook</Dropdown.Toggle><Dropdown.Menu>
         {bets[0].bookmakers.filter(elem => elem.title === "William Hill (US)"||elem.title === "FOX Bet"||elem.title==="FanDuel").map(bookmaker => {
+
           return <Dropdown.Item id={bookmaker.title} onClick={handleBookmakerSelect}>{bookmaker.title}</Dropdown.Item>
           })}</Dropdown.Menu></Dropdown>
           )}
 
-  let handleBookmakerSelect = (evt) => {
-    setBookMaker(evt.target.id)
-  }
+
+
 
   let renderOdds = () => {
     if(bookMaker && typeBet){
@@ -76,7 +95,7 @@ const HomePage = ({ isLoggedIn, handleLogout }) => {
             {el.outcomes.map((e) => {
               return(
                 <span>
-                  <input type="radio" name="bet" value="type"/>
+                  <input type="radio" name="bet" value="type" onChange={() => setType(el)} onClick={() => setChoice(e)}/>
                   <p>Team: {e.name} | Price: {e.price} | Point: {e.point}</p>
                 </span>
               )})}
@@ -84,7 +103,6 @@ const HomePage = ({ isLoggedIn, handleLogout }) => {
           )})}
         </Card.Body></Card></Col>
       )}}
-
 //MAIN RETURN
 
   return (
@@ -106,7 +124,7 @@ const HomePage = ({ isLoggedIn, handleLogout }) => {
                       Amount $ 
                       <input onChange={changeHandler}type="number" name="amount"/>
                     </label>
-                    <button type="submit">Submit</button>   
+                    <button onClick={handleAddBetSubmit} type="submit">Submit</button>   
         </Container>
       }
       {

@@ -1,6 +1,5 @@
 import axios from 'axios'
 const BETS_URL = 'http://localhost:8000/sportsbook/bets/'
-const ACCOUNTS_URL = 'http://localhost:8000/sportsbook/useraccount/'
 
 const fetchBets = async(token) => {
   const url = BETS_URL
@@ -28,7 +27,7 @@ const fetchBetsByID = async(token, betsID) => {
     return data
   };
 
-const addNewBet = (token, betObject) => {
+const addNewBet = async (token, betObject) => {
   const url = BETS_URL
   const init = {
     method: "POST",
@@ -36,7 +35,7 @@ const addNewBet = (token, betObject) => {
       "Content-Type": "application/json",
       Authorization: `JWT ${token}`
     },
-    body: JSON.stringify(listObj)
+    body: JSON.stringify(betObject)
   }
     let response = await fetch (url, init)
     let data = await response.json()
@@ -51,7 +50,21 @@ const editBet = (token, betsID, betsObj) => {
       "Content-Type": "application/json",
       Authorization: `JWT ${token}`
     },
-    body: JSON.stringify(listObj)
+    body: JSON.stringify(betsObj)
   }
-  
 }
+
+const deleteBet = async (token, taskID) => {
+  let url = BETS_URL + `${taskID}`
+  await fetch(url, { method: 'DELETE', headers: { 'Content-Type': 'application/json', Authorization: `JWT ${token}`}})
+}
+
+const exportItems = {
+  fetchBets,
+  fetchBetsByID,
+  addNewBet,
+  editBet,
+  deleteBet
+}
+
+export default exportItems

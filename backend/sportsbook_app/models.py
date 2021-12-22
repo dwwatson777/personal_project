@@ -14,9 +14,9 @@ class Bet(models.Model):
     bet_choice = models.CharField(max_length=255, null=True)
     odds = models.CharField(max_length=255, null=True)
     sports_book_choice = (
-        ("williamhill_us", "William Hill (US)"),
-        ("foxbet", "FOX Bet"),
-        ("fanduel", "FanDuel"),
+        ("William Hill (US)", "William Hill (US)"),
+        ("FOX Bet", "FOX Bet"),
+        ("FanDuel", "FanDuel"),
     )
     sports_book = models.CharField(max_length=255, blank=True, null=True, choices=sports_book_choice)
     amount_bet = models.CharField(max_length=255)

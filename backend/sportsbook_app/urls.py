@@ -5,6 +5,5 @@ from sportsbook_app.views import BetViewSet, UserAccountViewSet
 r = DefaultRouter()
 r.register(r"bets", BetViewSet, basename="bets")
 r.register(r"useraccount", UserAccountViewSet, basename="useraccount")
-
 urlpatterns = r.urls
 

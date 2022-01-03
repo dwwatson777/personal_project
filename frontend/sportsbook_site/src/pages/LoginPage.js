@@ -1,5 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 
 
 const Login = ({isLoggedIn, handleLogout, handleLogin}) => {
@@ -8,7 +9,7 @@ const Login = ({isLoggedIn, handleLogout, handleLogin}) => {
     return <div>
       <button onClick={handleLogout}>Logout</button>
       <div>
-        <Link to='/'>Home</Link>
+        <Navigate to='/'>Home</Navigate>
       </div>
     </div>
   }

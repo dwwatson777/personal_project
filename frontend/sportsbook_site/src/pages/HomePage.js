@@ -1,22 +1,27 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import UserContext from '../contexts/UserContext.js';
 import axios from 'axios';
 import { Data } from './Data';
 import { Col, Container, Card, Dropdown } from 'react-bootstrap';
-import BackendAPI from "../api/BackendAPI"
+import BetReviewPage from './BetReviewPage.js';
+import BackendAPI from "../api/BackendAPI";
 import BetsApi from '../api/BetsApi.js';
 
 const HomePage = ({ isLoggedIn, handleLogout }) => {
+    //CONST API URL
+  // const theOddsUrl = 'https://api.the-odds-api.com/v4/sports/basketball_nba/odds/?apiKey=757c85032fccd027cb5575eecbdd57fe&regions=us&markets=h2h,spreads,totals&oddsFormat=american';
+
+  //USERCONTEXT FOR AUTHENTICATION
   const userContext = useContext(UserContext);
   const { user } = userContext;
-    //STATES
 
+    //STATES
   const [bets, setBets] = useState(Data)
   const [amount, setAmount] = useState()
   const [bookMaker, setBookMaker] = useState(null)
   const [typeBet, setTypeBet] = useState(null)
-  const [game, setGame] = useState(null) //going to replace 'bets' with 'game' for actual api call
+  const [game, setGame] = useState(null)
   const [choice, setChoice] = useState(null)
   const [type, setType] = useState(null)
 
@@ -37,15 +42,9 @@ const HomePage = ({ isLoggedIn, handleLogout }) => {
     await BackendAPI.addNewBet(localStorage.getItem("auth-user"), betData)
 
   }
-  
-
-  //CONST API URL
-
-  // const theOddsUrl = 'https://api.the-odds-api.com/v4/sports/basketball_nba/odds/?apiKey=757c85032fccd027cb5575eecbdd57fe&regions=us&markets=h2h,spreads,totals&oddsFormat=american';
 
 
   //USEFFECT
-
   // useEffect(() => {
   //   axios.get(theOddsUrl).then(response => {
   //     setBets(response.data);
@@ -60,6 +59,10 @@ const HomePage = ({ isLoggedIn, handleLogout }) => {
  
 
 //FUNCTIONS
+  let gameSelect = (evt) => {
+    setGame(evt.target.id)
+    console.log(evt.target.id)
+  }
 
   let handleBookmakerSelect = (evt) => {
     setBookMaker(evt.target.id)
@@ -70,11 +73,23 @@ const HomePage = ({ isLoggedIn, handleLogout }) => {
     let tempAmount = evt.target.value
     setAmount(tempAmount)
   } 
+  let renderGame = () => {
+    return(
+      <Dropdown><Dropdown.Toggle>Select game</Dropdown.Toggle><Dropdown.Menu>
+        {bets.map(elem => {
+          return(
+            <Dropdown.Item id={elem} onClick={() => setGame(elem)}>{elem.away_team} VS. {elem.home_team}</Dropdown.Item>
+          )
+        })}
+      </Dropdown.Menu>
+      </Dropdown>
+    )
+  }
 
   let renderSportsBooks = () => {
     return(
       <Dropdown><Dropdown.Toggle>Select SportsBook</Dropdown.Toggle><Dropdown.Menu>
-        {bets[0].bookmakers.filter(elem => elem.title === "William Hill (US)"||elem.title === "FOX Bet"||elem.title==="FanDuel").map(bookmaker => {
+        {game.bookmakers.filter(elem => elem.title === "William Hill (US)"||elem.title === "FOX Bet"||elem.title==="FanDuel").map(bookmaker => {
 
           return <Dropdown.Item id={bookmaker.title} onClick={handleBookmakerSelect}>{bookmaker.title}</Dropdown.Item>
           })}</Dropdown.Menu></Dropdown>
@@ -113,11 +128,11 @@ const HomePage = ({ isLoggedIn, handleLogout }) => {
         <Container>
         <div>
           Welcome Back {user.username}
-          <p style={{ color:'green' }}>{ bets[0].home_team }</p>
-          <p style={{ color:'red' }}>{ bets[0].away_team }</p>
+          <Container className="GameContainer">{bets && renderGame()}</Container>
         </div>
           <Container className="BetsContainer">
-            {renderSportsBooks()}
+            {game && <h3>{game.away_team} VS. {game.home_team}</h3>}
+            {game && renderSportsBooks()}
                   </Container>
                   {(bookMaker) && renderOdds()}
                     <label>

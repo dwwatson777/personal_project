@@ -1,4 +1,4 @@
-import axios from 'axios'
+
 const BETS_URL = 'http://localhost:8000/sportsbook/bets/'
 
 const fetchBets = async(token) => {
@@ -42,7 +42,7 @@ const addNewBet = async (token, betObject) => {
     return data
   }
 
-const editBet = (token, betsID, betsObj) => {
+const editBet = async (token, betsID, betsObj) => {
   const url = BETS_URL + `${betsID}/`
   const init = {
     method: "PUT",
@@ -52,6 +52,9 @@ const editBet = (token, betsID, betsObj) => {
     },
     body: JSON.stringify(betsObj)
   }
+  let response = await fetch (url, init)
+  let data = await response.json()
+  return data
 }
 
 const deleteBet = async (token, taskID) => {

@@ -12,7 +12,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [ user, setUser ] = useState(null);
+  const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {

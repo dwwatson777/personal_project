@@ -9,7 +9,7 @@ const Login = ({isLoggedIn, handleLogout, handleLogin}) => {
     return <div>
       <button onClick={handleLogout}>Logout</button>
       <div>
-        <Navigate to='/'>Home</Navigate>
+        <Navigate to='/home/'>Home</Navigate>
       </div>
     </div>
   }

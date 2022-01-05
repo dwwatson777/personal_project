@@ -58,7 +58,7 @@ function App() {
       <Router>
         <UserContext.Provider value={{ user: user, setUser: handleLogin, error: error }}>
           <Routes>
-            <Route path="/" element={<HomePage isLoggedIn={isLoggedIn} handleLogout={handleLogout}/>} />
+            <Route path="/home" element={<HomePage isLoggedIn={isLoggedIn} handleLogout={handleLogout}/>} />
             <Route path="/login" element={<LoginPage isLoggedIn={isLoggedIn} handleLogin={handleLogin} handleLogout={handleLogout} user={user} />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/bets/" element={<BetReviewPage />}/>

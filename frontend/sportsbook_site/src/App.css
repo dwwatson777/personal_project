@@ -22,4 +22,15 @@
   gap: 50px;
 }
 
+.BetCard {
+  width: 400PX;
+  align-items: center;
+  margin: auto;
+
+}
+
+.EDButtons {
+  margin-left: 10px;
+}
+
 

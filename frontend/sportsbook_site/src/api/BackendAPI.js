@@ -45,7 +45,7 @@ const addNewBet = async (token, betObject) => {
 const editBet = async (token, betsID, betsObj) => {
   const url = BETS_URL + `${betsID}/`
   const init = {
-    method: "PUT",
+    method: "PATCH",
     headers: {
       "Content-Type": "application/json",
       Authorization: `JWT ${token}`
@@ -57,8 +57,8 @@ const editBet = async (token, betsID, betsObj) => {
   return data
 }
 
-const deleteBet = async (token, taskID) => {
-  let url = BETS_URL + `${taskID}`
+const deleteBet = async (token, betsID) => {
+  let url = BETS_URL + `${betsID}`
   await fetch(url, { method: 'DELETE', headers: { 'Content-Type': 'application/json', Authorization: `JWT ${token}`}})
 }
 

@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import UserContext from '../contexts/UserContext.js';
 import axios from 'axios';
-import { Data } from './Data';
+import { Data } from '../contexts/Data';
 import { Col, Container, Card, Dropdown } from 'react-bootstrap';
 import BetReviewPage from './BetReviewPage.js';
 import BackendAPI from "../api/BackendAPI";
@@ -15,6 +15,7 @@ const HomePage = ({ isLoggedIn, handleLogout }) => {
   //USERCONTEXT FOR AUTHENTICATION
   const userContext = useContext(UserContext);
   const { user } = userContext;
+  const navigate = useNavigate()
 
     //STATES
   const [bets, setBets] = useState(Data)
@@ -40,7 +41,7 @@ const HomePage = ({ isLoggedIn, handleLogout }) => {
     }
     console.log(betData)
     await BackendAPI.addNewBet(localStorage.getItem("auth-user"), betData)
-
+    navigate('/bets/')
   }
 
 
@@ -118,6 +119,7 @@ const HomePage = ({ isLoggedIn, handleLogout }) => {
           )})}
         </Card.Body></Card></Col>
       )}}
+
 //MAIN RETURN
 
   return (
@@ -139,7 +141,7 @@ const HomePage = ({ isLoggedIn, handleLogout }) => {
                       Amount $ 
                       <input onChange={changeHandler}type="number" name="amount"/>
                     </label>
-                    <button onClick={handleAddBetSubmit} type="submit">Submit</button>   
+                    <button onClick={handleAddBetSubmit} type="submit">Submit</button> 
         </Container>
       }
       {

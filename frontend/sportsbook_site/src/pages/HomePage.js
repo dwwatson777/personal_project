@@ -3,10 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import UserContext from '../contexts/UserContext.js';
 import axios from 'axios';
 import { Data } from '../contexts/Data';
-import { Col, Container, Card, Dropdown } from 'react-bootstrap';
+import { Col, Container, Card, CardGroup, Dropdown } from 'react-bootstrap';
 import BetReviewPage from './BetReviewPage.js';
 import BackendAPI from "../api/BackendAPI";
 import BetsApi from '../api/BetsApi.js';
+import OtherBasketball from '../Images/OtherBasketball.png'
+import SlamDunk from '../Images/SlamDunk.png'
 
 const HomePage = ({ isLoggedIn, handleLogout }) => {
     //CONST API URL
@@ -18,10 +20,10 @@ const HomePage = ({ isLoggedIn, handleLogout }) => {
   const navigate = useNavigate()
 
     //STATES
-  const [bets, setBets] = useState(Data)
+  const [bets, setBets] = useState([])
   const [amount, setAmount] = useState()
-  const [bookMaker, setBookMaker] = useState(null)
-  const [typeBet, setTypeBet] = useState(null)
+  const [bookMaker, setBookMaker] = useState("FanDuel")
+  const [typeBet, setTypeBet] = useState()
   const [game, setGame] = useState(null)
   const [choice, setChoice] = useState(null)
   const [type, setType] = useState(null)
@@ -30,8 +32,8 @@ const HomePage = ({ isLoggedIn, handleLogout }) => {
   const handleAddBetSubmit = async (event) => {
     event.preventDefault()
     const betData = {
-      home_team: bets[0].home_team,
-      away_team: bets[0].away_team,
+      home_team: bets.home_team,
+      away_team: bets.away_team,
       type: type.key,
       bet_choice: choice.name,
       odds: choice.price,
@@ -46,17 +48,18 @@ const HomePage = ({ isLoggedIn, handleLogout }) => {
 
 
   //USEFFECT
-  // useEffect(() => {
-  //   axios.get(theOddsUrl).then(response => {
-  //     setBets(response.data);
+  useEffect(() => {
+    axios.get(theOddsUrl).then(response => {
+      console.log(response.data)
+      setBets(response.data)
 
-  //   })
-  // }, []);
+    })
+  }, []);
 
- useEffect(() => {
-  let filteredMarkets = bets[0].bookmakers.filter(elem => elem.title === bookMaker)
-  setTypeBet(filteredMarkets[0])
- }, [bookMaker])
+ 
+  useEffect(() => {
+    console.log(typeBet)
+   }, [typeBet])
  
 
 //FUNCTIONS
@@ -67,13 +70,17 @@ const HomePage = ({ isLoggedIn, handleLogout }) => {
 
   let handleBookmakerSelect = (evt) => {
     setBookMaker(evt.target.id)
+    let filteredMarkets = game.bookmakers.find(elem => elem.title === bookMaker)
+    console.log(filteredMarkets)
+    setTypeBet(filteredMarkets)
     console.log(evt.target.id)
 }
 
   function changeHandler(evt) {
     let tempAmount = evt.target.value
     setAmount(tempAmount)
-  } 
+  }
+
   let renderGame = () => {
     return(
       <Dropdown><Dropdown.Toggle>Select game</Dropdown.Toggle><Dropdown.Menu>
@@ -89,14 +96,14 @@ const HomePage = ({ isLoggedIn, handleLogout }) => {
 
   let renderSportsBooks = () => {
     return(
-      <Dropdown><Dropdown.Toggle>Select SportsBook</Dropdown.Toggle><Dropdown.Menu>
+      <Dropdown className="SportsBookDrop"><Dropdown.Toggle>
+        Select SportsBook
+        </Dropdown.Toggle><Dropdown.Menu>
         {game.bookmakers.filter(elem => elem.title === "William Hill (US)"||elem.title === "FOX Bet"||elem.title==="FanDuel").map(bookmaker => {
 
           return <Dropdown.Item id={bookmaker.title} onClick={handleBookmakerSelect}>{bookmaker.title}</Dropdown.Item>
           })}</Dropdown.Menu></Dropdown>
           )}
-
-
 
 
   let renderOdds = () => {
@@ -124,20 +131,27 @@ const HomePage = ({ isLoggedIn, handleLogout }) => {
 
   return (
     <Container className="HomeContainer">
-      <h1>Home Page</h1>
+      <Container className="HeaderContainer">
+      <h1>Bet Testers</h1>
+      <h3>The Ultimate Site for Testing Your Betting Acumen</h3>
+      </Container>
       {
         user &&
         <Container>
         <div>
+          <div style={{color: 'white'}}>
+          <h3>  
           Welcome Back {user.username}
+          </h3>
+          </div>
           <Container className="GameContainer">{bets && renderGame()}</Container>
         </div>
           <Container className="BetsContainer">
-            {game && <h3>{game.away_team} VS. {game.home_team}</h3>}
+            {game && <h3 style={{color: 'white'}}>{game.away_team} VS. {game.home_team}</h3>}
             {game && renderSportsBooks()}
                   </Container>
                   {(bookMaker) && renderOdds()}
-                    <label>
+                    <label style={{color: 'white'}}>
                       Amount $ 
                       <input onChange={changeHandler}type="number" name="amount"/>
                     </label>
@@ -148,12 +162,35 @@ const HomePage = ({ isLoggedIn, handleLogout }) => {
         !isLoggedIn
         ?
         <div>
-          <div>
-            <Link to='/login'>Login</Link>
+          <div className="Accounts">
+            <CardGroup className="Images">
+            <Card>
+              <Card.Header>Existing Users</Card.Header>
+              <Card.Body>
+                <Card.Text>
+                  Already a user? Login and starting placing your bets!
+                </Card.Text>
+                <Link to='/login'>Login</Link>
+                <div className="ExistingImage">
+                  <img src={OtherBasketball} alt="basketball"/>
+                </div>
+              </Card.Body>
+            </Card>
+            <br/>
+            <Card>
+              <Card.Header>Create New Account</Card.Header>
+                <Card.Body>
+                  <Card.Text>Create an account and see if you have what it takes to win!</Card.Text>
+                    <Link to='/signup'>Signup</Link>
+                    <div className="ExistingImage">
+                      <img src={SlamDunk} alt="slamdunk"/>
+                    </div>
+                </Card.Body>
+            </Card>
+            </CardGroup>
           </div>
-          <div>
-            <Link to='/signup'>Signup</Link>
-          </div>
+          <hr/>
+
         </div>
         :
         <button onClick={handleLogout}>Logout</button>
@@ -164,59 +201,3 @@ const HomePage = ({ isLoggedIn, handleLogout }) => {
 
 export default HomePage;
 
-{/*                   
-                    return(
-                      <Col>
-                      <Card><Card.Body>
-                      <input type="radio" name="bookmaker" value={bookmaker.title}/>
-                      <label><h3>{bookmaker.title}</h3></label>
-                      {bookmaker.markets.map((el) => {
-                        return(
-                         <span>
-                          <h4>{el.key}</h4>
-                          {el.outcomes.map((e) => {
-                            return(
-                              <span>
-                                <input type="radio" name="bet" value="type"/>
-                                <p>Team: {e.name} | Price: {e.price} | Point: {e.point}</p>
-                              </span>
-                            )
-                          })}
-                         </span>
-                        )
-                        }
-                      )}
-                      </Card.Body></Card>
-                      </Col>
-            
-                    )
-            
-                  })} */}
-
-                        {/* <ul style={{ listStyle: 'none' }}>
-        {bets.map(bet => {
-          return( 
-          <li>
-            <p style={{ color:'green' }}>{ bet.home_team }</p>
-            <p style={{ color:'red' }}>{ bet.away_team }</p>
-            <span>
-            { bet.bookmakers.filter(elem => elem.title === "William Hill (US)"
-            ||elem.title === "FOX Bet"
-            ||elem.title==="FanDuel").map(bookmaker => {
-              return<p>{bookmaker.title}</p>
-            })}
-            </span>
-            <form>
-              <label>
-                Amount $ 
-                <input type="number" name="amount"/>
-              </label>
-              <input type="submit" value="Submit"/>
-            </form>
-          </li>
-          
-          )
-
-
-        })}
-      </ul> */}

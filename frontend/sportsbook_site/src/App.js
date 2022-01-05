@@ -9,6 +9,7 @@ import UserAccountPage from "./pages/UserAccountPage"
 import UserContext from './contexts/UserContext.js';
 import { getLoggedInUser, login } from './api/UserAPI';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Basetball from './Images/Basetball.png'
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -54,7 +55,7 @@ function App() {
 
 
   return (
-    <div className="App">
+    <div className="App" style={{backgroundImage: `url(${Basetball})`}}>
       <Router>
         <UserContext.Provider value={{ user: user, setUser: handleLogin, error: error }}>
           <Routes>

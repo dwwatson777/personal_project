@@ -79,13 +79,13 @@ const renderBets = () => {
 
   return (
     <div>
-      <h1>Bet Review and Alter Page</h1>
+      <h1 style={{color: 'white'}}>Bet Review and Alter Page</h1>
       {showEditForm &&
       <div>
-        <h3>You are editing your {betForEdit.home_team} VS. {betForEdit.away_team} bet</h3>
+        <h3 style={{color: 'white'}}>You are editing your {betForEdit.home_team} VS. {betForEdit.away_team} bet</h3>
         <Form onSubmit={handleFormSubmit}>
           <Form.Group>
-            <Form.Label>Amount Bet</Form.Label>
+            <Form.Label style={{color: 'white'}}>Amount Bet</Form.Label>
               <Form.Control defaultValue={betForEdit.amount_bet} placeholder="Amount Bet" />
           </Form.Group>
             <br />
@@ -97,6 +97,7 @@ const renderBets = () => {
         </div>}
       <hr />
       {userBets && renderBets()}
+      <hr/>
     </div>
   )
 }

@@ -1,17 +1,28 @@
 .App {
   text-align: center;
+  height: 100vh;
+  position: absolute;
+  left: 0;
+  width: 100%;
+  overflow: auto;
 }
 
 .HomeContainer {
   align-items: center;
-
 }
+.HeaderContainer{
+  color: white;
+  margin: 4em;
+  border: solid 10px;
+}
+
 
 .BetsContainer {
   display: flex!important;
+  gap: 16px;
   align-items: center!important;
   justify-content: space-between!important;
-
+  margin: auto;
 }
 
 .SportsBookContainer {
@@ -33,4 +44,19 @@
   margin-left: 10px;
 }
 
+.Accounts {
+  margin-left: 10px;
+  
+}
+
+.ExistingImage>img{
+  border-radius: 50%;
+  height: 20em;
+  width: 20em;
+}
+
+.SportsBookDrop{
+  display: flex;
+  gap: 25px; 
+}
 
